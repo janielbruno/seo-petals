@@ -189,8 +189,8 @@
             <!-- Card: Próxima Sessão -->
             <div class="card">
                 <span class="tag">Próximo Laboratório</span>
-                <h3>Neuromarketing em Title Tags e Meta Descriptions</h3>
-                <p><strong>Data:</strong> Sexta-feira, 14:00<br><strong>Facilitador:</strong> Aberto</p>
+                <h3 id="lab-titulo">Carregando tema...</h3>
+                <p><strong id="lab-data">Data: ...</strong><br><strong id="lab-fac">Facilitador: ...</strong></p>
             </div>
 
             <!-- Insight da Semana -->
@@ -222,8 +222,8 @@
         <section id="aba-laboratorios" class="aba-conteudo">
             <div class="card">
                 <span class="tag">Sessão Atual</span>
-                <h3>Neuromarketing em SERP</h3>
-                <p>Tópicos discutidos: Densidade de palavras-chave x Gatilhos cognitivos de clique.</p>
+                <h3 id="aba-lab-titulo">Carregando tema...</h3>
+                <p id="aba-lab-topicos">Tópicos discutidos: ...</p>
             </div>
 
             <div class="card">
@@ -319,7 +319,7 @@ Plano de Ação e Próximos Passos:
         // 1. Importar funções Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // 2. Configuração Firebase
         const firebaseConfig = {
@@ -474,6 +474,35 @@ Plano de Ação e Próximos Passos:
                 container.innerHTML = htmlNoticias;
             } else {
                 container.innerHTML = "<p style='padding: 16px; font-size: 14px; color: #D32F2F;'>Falha ao carregar o radar.</p>";
+            }
+        };
+
+        // =========================================================
+        // LÓGICA DO BANCO DE DADOS (FIRESTORE)
+        // =========================================================
+        window.carregarSessaoAtiva = async function() {
+            try {
+                // Cria uma consulta: "Busque na coleção 'sessoes' onde o status seja 'ativo'"
+                const q = query(collection(db, "sessoes"), where("status", "==", "ativo"));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    // Pega o primeiro documento que achar
+                    const sessao = querySnapshot.docs[0].data();
+
+                    // Preenche a Aba Início
+                    document.getElementById("lab-titulo").innerText = sessao.titulo;
+                    document.getElementById("lab-data").innerText = "Data: " + sessao.data;
+                    document.getElementById("lab-fac").innerText = "Facilitador: " + sessao.facilitador;
+
+                    // Preenche a Aba Laboratórios
+                    document.getElementById("aba-lab-titulo").innerText = sessao.titulo;
+                    document.getElementById("aba-lab-topicos").innerText = "Tópicos discutidos: " + sessao.topicos;
+                } else {
+                    document.getElementById("lab-titulo").innerText = "Nenhum laboratório agendado";
+                }
+            } catch (error) {
+                console.error("Erro ao puxar dados do Firestore:", error);
             }
         };
 
