@@ -62,7 +62,7 @@
         .card h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.4; color: #1A1A1A; }
         .card p { font-size: 14px; color: #666; margin-bottom: 16px; line-height: 1.5; }
 
-        /* CARROSSEL DE NOTÍCIAS */
+        /*  DE NOTÍCIAS */
         .carrossel-noticias {
             display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px;
             scroll-snap-type: x mandatory; /* Faz o scroll "travar" no card */
@@ -192,35 +192,10 @@
             <!-- Carrossel de Notícias -->
             <div>
                 <span class="tag" style="margin-bottom: 12px;">Radar SEO (Últimas Notícias)</span>
-                <div class="carrossel-noticias">
-                    
-                    <!-- Notícia 1 -->
-                    <div class="news-card">
-                        <!-- Imagem de placeholder. No app real, a API do RSS vai inserir a imagem da notícia aqui -->
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="Notícia 1" class="news-img">
-                        <div class="news-content">
-                            <h4>Google lança atualização de Core Update para março</h4>
-                            <div class="news-source">Google Search Central • Há 2 horas</div>
-                        </div>
-                    </div>
-
-                    <!-- Notícia 2 -->
-                    <div class="news-card">
-                        <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80" alt="Notícia 2" class="news-img">
-                        <div class="news-content">
-                            <h4>Como adaptar o tom de voz do conteúdo para o SGE</h4>
-                            <div class="news-source">Search Engine Land • Há 5 horas</div>
-                        </div>
-                    </div>
-
-                    <!-- Notícia 3 -->
-                    <div class="news-card">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Notícia 3" class="news-img">
-                        <div class="news-content">
-                            <h4>Impacto técnico do Java em páginas de produto</h4>
-                            <div class="news-source">Search Engine Journal • Ontem</div>
-                        </div>
-                    </div>
+               <div class="carrossel-noticias" id="noticias-container">
+                    <!-- As notícias entrarão aqui via JavaScript -->
+                    <p style="padding: 16px; font-size: 14px; color: #666;">Buscando radar SEO...</p>
+                </div>
 
                 </div>
             </div>
@@ -365,6 +340,10 @@
             // Atualiza o avatar no topo com a primeira letra do e-mail
             document.querySelector('.avatar').innerText = user.email.charAt(0).toUpperCase();
             console.log("Usuário ativo:", user.email);
+
+            // CHAMA A FUNÇÃO DE NOTÍCIAS AQUI!
+            carregarNoticias();
+            
         } else {
             // Se não tem ninguém logado, mostra a tela de login
             telaLogin.style.display = "flex";
@@ -411,6 +390,66 @@
         navigator.clipboard.writeText(textarea.value).then(() => {
             alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
         });
+    };
+
+    // =========================================================
+    // LÓGICA DO FEED DE NOTÍCIAS (RSS TO JSON)
+    // =========================================================
+    
+    window.carregarNoticias = async function() {
+        const container = document.getElementById("noticias-container");
+        
+        // Fontes oficiais de SEO
+        const feeds = [
+            { nome: "Google Search Central", url: "https://developers.google.com/search/blog/rss" },
+            { nome: "Search Engine Journal", url: "https://www.searchenginejournal.com/feed/" },
+            { nome: "Search Engine Land", url: "https://searchengineland.com/feed" }
+        ];
+
+        let htmlNoticias = "";
+
+        for (const feed of feeds) {
+            try {
+                // Usa a API rss2json para contornar o bloqueio de segurança do navegador
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status === "ok") {
+                    // Pega apenas a notícia mais recente (posição 0) de cada portal
+                    const item = data.items[0];
+
+                    // Tenta achar a imagem de destaque da notícia. Se não tiver, usa uma imagem genérica de SEO
+                    let imgUrl = item.thumbnail || 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80';
+                    
+                    // Se o feed não mandar thumbnail, o script procura uma imagem dentro do texto
+                    if (!item.thumbnail && item.content) {
+                        const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                        if (imgMatch) imgUrl = imgMatch[1];
+                    }
+
+                    // Constrói o card da notícia em HTML
+                    htmlNoticias += `
+                    <div class="news-card" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+                        <img src="${imgUrl}" alt="Imagem da Notícia" class="news-img">
+                        <div class="news-content">
+                            <h4>${item.title}</h4>
+                            <div class="news-source">${feed.nome}</div>
+                        </div>
+                    </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Erro ao carregar do portal: " + feed.nome, error);
+            }
+        }
+
+        // Se conseguiu carregar, injeta os cards no carrossel. Se falhou, avisa.
+        if(htmlNoticias !== "") {
+            container.innerHTML = htmlNoticias;
+        } else {
+            container.innerHTML = "<p style='padding: 16px; font-size: 14px; color: #D32F2F;'>Falha ao carregar o radar.</p>";
+        }
     };
 
     // Bloco de Notas (Local Storage)
