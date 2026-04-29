@@ -312,70 +312,69 @@
         </div>
     </nav>
 
-    <!-- LÓGICA JAVASCRIPT -->
-    <!-- LÓGICA JAVASCRIPT E FIREBASE -->
-// 1. Importar as funções principais do Firebase via CDN (Links completos)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// 2. Configuração do seu Projeto Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyD7UltQiBZ1sATOdhS0sdVQFCTZZot_0jo",
-    authDomain: "seo-petals.firebaseapp.com",
-    projectId: "seo-petals",
-    storageBucket: "seo-petals.firebasestorage.app",
-    messagingSenderId: "282226943604",
-    appId: "1:282226943604:web:40b2a25dce3b359b26d321", // <-- VÍRGULA ADICIONADA AQUI
-    measurementId: "G-8F8R0KC0VD"
-};
+   <!-- LÓGICA JAVASCRIPT E FIREBASE -->
+<script type="module">
+    // 1. Importar as funções principais do Firebase via CDN (Sem o Analytics)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// 3. Inicializar o Firebase, a Autenticação e o Banco de Dados
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
+    // 2. Configuração do seu Projeto Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7UltQiBZ1sATOdhS0sdVQFCTZZot_0jo",
+        authDomain: "seo-petals.firebaseapp.com",
+        projectId: "seo-petals",
+        storageBucket: "seo-petals.firebasestorage.app",
+        messagingSenderId: "282226943604",
+        appId: "1:282226943604:web:40b2a25dce3b359b26d321" 
+    };
 
-console.log("Firebase conectado com sucesso!");
+    // 3. Inicializar o Firebase, a Autenticação e o Banco de Dados
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-// =========================================================
-// LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
-// =========================================================
+    console.log("Firebase conectado com sucesso. Pronto para a próxima etapa!");
 
-window.mudarAba = function(abaId, elementoClicado) {
-    document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
-    document.getElementById('aba-' + abaId).classList.add('ativa');
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    elementoClicado.classList.add('active');
-};
+    // =========================================================
+    // LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
+    // =========================================================
 
-window.copiarTemplate = function() {
-    const textarea = document.getElementById("emailTemplate");
-    textarea.select();
-    textarea.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(textarea.value).then(() => {
-        alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
-    });
-};
+    window.mudarAba = function(abaId, elementoClicado) {
+        document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
+        document.getElementById('aba-' + abaId).classList.add('ativa');
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        elementoClicado.classList.add('active');
+    };
 
-// Bloco de Notas (Local Storage)
-const campoNotas = document.getElementById('blocoNotas');
-if (campoNotas) {
-    campoNotas.value = localStorage.getItem('seoPetalsNotas') || '';
-    campoNotas.addEventListener('keyup', () => {
-        localStorage.setItem('seoPetalsNotas', campoNotas.value);
-    });
-}
+    window.copiarTemplate = function() {
+        const textarea = document.getElementById("emailTemplate");
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
+        });
+    };
 
-// Registro do Service Worker (Para PWA)
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-        navigator.serviceWorker.register("sw.js")
-            .then(res => console.log("Service Worker registrado com sucesso!"))
-            .catch(err => console.log("Falha no Service Worker", err));
-    });
-}
+    // Bloco de Notas (Local Storage)
+    const campoNotas = document.getElementById('blocoNotas');
+    if (campoNotas) {
+        campoNotas.value = localStorage.getItem('seoPetalsNotas') || '';
+        campoNotas.addEventListener('keyup', () => {
+            localStorage.setItem('seoPetalsNotas', campoNotas.value);
+        });
+    }
+
+    // Registro do Service Worker (Para PWA)
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+            navigator.serviceWorker.register("sw.js")
+                .then(res => console.log("Service Worker registrado com sucesso!"))
+                .catch(err => console.log("Falha no Service Worker", err));
+        });
+    }
+</script>
 
 </body>
 </html>
