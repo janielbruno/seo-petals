@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Petals - Hub</title>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007BFF">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET E VARIÁVEIS GERAIS */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #F8F9FA; color: #333333; padding-bottom: 80px; }
+
+        /* CABEÇALHO */
+        header {
+            background-color: #FFFFFF; padding: 16px 20px; display: flex;
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        header h1 { font-size: 20px; color: #1A1A1A; }
+        .avatar {
+            width: 36px; height: 36px; background-color: #007BFF;
+            color: white; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        /* CONTAINER PRINCIPAL E ABAS */
+        main { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .aba-conteudo { display: none; }
+        .aba-conteudo.ativa { display: block; }
+        
+        /* SAUDAÇÃO HOME */
+        .saudacao { margin-bottom: 20px; }
+        .saudacao h2 { font-size: 22px; color: #1A1A1A; }
+        .saudacao p { font-size: 14px; color: #666; }
+
+        /* ATALHOS RÁPIDOS (QUICK ACTIONS) */
+        .atalhos-container {
+            display: flex; gap: 12px; margin-bottom: 24px;
+            overflow-x: auto; padding-bottom: 8px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .atalhos-container::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        .atalho-btn {
+            background: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 12px;
+            padding: 12px 16px; min-width: 100px; text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); cursor: pointer; flex-shrink: 0;
+        }
+        .atalho-btn span { display: block; font-size: 20px; margin-bottom: 6px; }
+        .atalho-btn p { font-size: 12px; font-weight: 600; color: #333; margin: 0; }
+
+        /* ESTILOS DOS CARDS PADRÃO */
+        .card {
+            background-color: #FFFFFF; border-radius: 12px;
+            padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .tag {
+            font-size: 12px; font-weight: 600; color: #007BFF;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: inline-block;
+        }
+        .card h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.4; color: #1A1A1A; }
+        .card p { font-size: 14px; color: #666; margin-bottom: 16px; line-height: 1.5; }
+
+        /* CARROSSEL DE NOTÍCIAS */
+        .carrossel-noticias {
+            display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px;
+            scroll-snap-type: x mandatory; /* Faz o scroll "travar" no card */
+            scrollbar-width: none;
+        }
+        .carrossel-noticias::-webkit-scrollbar { display: none; }
+        
+        .news-card {
+            background: #FFFFFF; border-radius: 12px; border: 1px solid #E9ECEF;
+            flex: 0 0 85%; /* O card ocupa 85% da tela, deixando o próximo aparecendo */
+            scroll-snap-align: center; overflow: hidden; display: flex; flex-direction: column;
+        }
+        .news-img {
+            width: 100%; height: 140px; background-color: #E9ECEF; object-fit: cover;
+        }
+        .news-content { padding: 16px; }
+        .news-content h4 { font-size: 15px; color: #1A1A1A; margin-bottom: 6px; line-height: 1.3; }
+        .news-source { font-size: 12px; color: #888; }
+
+        /* CAIXA DE INSIGHT DA SEMANA */
+        .insight-box {
+            background-color: #F0F7FF; border-left: 4px solid #007BFF;
+            padding: 16px; border-radius: 0 8px 8px 0; margin-bottom: 16px;
+        }
+        .insight-box p { margin: 0; font-size: 14px; font-style: italic; color: #333; }
+
+        /* NAVEGAÇÃO INFERIOR */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background-color: #FFFFFF; display: flex; justify-content: space-around;
+            padding: 12px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 100;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #666; font-size: 12px; font-weight: 600; cursor: pointer; width: 25%;
+        }
+        .nav-item.active { color: #007BFF; }
+        .nav-icon { font-size: 20px; margin-bottom: 4px; }
+
+        /* GAMIFICAÇÃO E PROGRESSO */
+.stats-grid {
+    display: flex; gap: 12px; margin-bottom: 24px;
+}
+.stat-box {
+    background: #F0F7FF; border: 1px solid #CCE5FF; border-radius: 12px;
+    padding: 16px 12px; text-align: center; flex: 1;
+}
+.stat-box span { display: block; font-size: 24px; margin-bottom: 4px; }
+.stat-box strong { font-size: 18px; color: #007BFF; display: block; }
+.stat-box p { font-size: 11px; color: #666; margin: 0; text-transform: uppercase; font-weight: 600; }
+
+.progress-container { margin-bottom: 24px; }
+.progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 600;}
+.progress-bar-bg { background-color: #E9ECEF; border-radius: 20px; height: 12px; width: 100%; overflow: hidden; }
+.progress-bar-fill { background-color: #007BFF; height: 100%; width: 65%; border-radius: 20px; transition: width 0.5s ease; }
+
+.badges-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+.badges-container::-webkit-scrollbar { display: none; }
+.badge-item {
+    background: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 50px;
+    padding: 8px 16px; display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: #333; flex-shrink: 0;
+}
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SEO Petals 🌸</h1>
+        <div class="avatar">VOCÊ</div>
+    </header>
+
+    <main>
+        <!-- ABA 1: INÍCIO (Dashboard) -->
+        <section id="aba-inicio" class="aba-conteudo ativa">
+            
+            <div class="saudacao">
+                <h2>Olá, Analista! 👋</h2>
+                <p>Pronto para o próximo laboratório?</p>
+            </div>
+
+            <!-- Atalhos Rápidos -->
+            <div class="atalhos-container">
+                <div class="atalho-btn" onclick="mudarAba('espaco', document.querySelectorAll('.nav-item')[2])">
+                    <span>📝</span><p>Anotação</p>
+                </div>
+                <div class="atalho-btn">
+                    <span>📚</span><p>Guias</p>
+                </div>
+                <div class="atalho-btn" onclick="mudarAba('laboratorios', document.querySelectorAll('.nav-item')[1])">
+                    <span>💡</span><p>Gerar Pitch</p>
+                </div>
+                <div class="atalho-btn">
+                    <span>📂</span><p>Arquivos</p>
+                </div>
+            </div>
+
+            <!-- Card: Próxima Sessão -->
+            <div class="card">
+                <span class="tag">Próximo Laboratório</span>
+                <h3>Neuromarketing em Title Tags e Meta Descriptions</h3>
+                <p><strong>Data:</strong> Sexta-feira, 14:00<br><strong>Facilitador:</strong> Aberto</p>
+            </div>
+
+            <!-- Insight da Semana -->
+            <div class="card">
+                <span class="tag">Insight Anterior</span>
+                <h3>O que aprendemos no último Lab?</h3>
+                <div class="insight-box">
+                    <p>"O tempo de carregamento da página (LCP) impacta mais a taxa de rejeição no e-commerce do que o design do botão de compra."</p>
+                </div>
+            </div>
+
+            <!-- Carrossel de Notícias -->
+            <div>
+                <span class="tag" style="margin-bottom: 12px;">Radar SEO (Últimas Notícias)</span>
+                <div class="carrossel-noticias">
+                    
+                    <!-- Notícia 1 -->
+                    <div class="news-card">
+                        <!-- Imagem de placeholder. No app real, a API do RSS vai inserir a imagem da notícia aqui -->
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80" alt="Notícia 1" class="news-img">
+                        <div class="news-content">
+                            <h4>Google lança atualização de Core Update para março</h4>
+                            <div class="news-source">Google Search Central • Há 2 horas</div>
+                        </div>
+                    </div>
+
+                    <!-- Notícia 2 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80" alt="Notícia 2" class="news-img">
+                        <div class="news-content">
+                            <h4>Como adaptar o tom de voz do conteúdo para o SGE</h4>
+                            <div class="news-source">Search Engine Land • Há 5 horas</div>
+                        </div>
+                    </div>
+
+                    <!-- Notícia 3 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Notícia 3" class="news-img">
+                        <div class="news-content">
+                            <h4>Impacto técnico do JavaScript em páginas de produto</h4>
+                            <div class="news-source">Search Engine Journal • Ontem</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 2: LABORATÓRIOS (Mantida como antes) -->
+        <section id="aba-laboratorios" class="aba-conteudo">
+            <div class="card">
+                <span class="tag">Sessão Atual</span>
+                <h3>Neuromarketing em SERP</h3>
+                <p>Tópicos discutidos: Densidade de palavras-chave x Gatilhos cognitivos de clique.</p>
+            </div>
+            <!-- ... resto da aba laboratórios ... -->
+        </section>
+
+        <!-- ABA 3: MEU ESPAÇO (Mantida como antes) -->
+        <section id="aba-espaco" class="aba-conteudo">
+            <div class="card">
+                <span class="tag">Bloco de Notas Rápido</span>
+                <p>Suas anotações são salvas automaticamente no seu navegador.</p>
+            </div>
+            <!-- ... resto da aba espaço ... -->
+        </section>
+
+        <!-- ABA 4: PROGRESSO (Evolução e Gamificação) -->
+<section id="aba-progresso" class="aba-conteudo">
+    
+    <div class="saudacao">
+        <h2>Seu Impacto 🚀</h2>
+        <p>Acompanhe seu crescimento no hub de aprendizado.</p>
+    </div>
+
+    <!-- Estatísticas Rápidas -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <span>🔥</span>
+            <strong>3</strong>
+            <p>Semanas Seguidas</p>
+        </div>
+        <div class="stat-box">
+            <span>🧪</span>
+            <strong>8</strong>
+            <p>Labs Participados</p>
+        </div>
+        <div class="stat-box">
+            <span>🎤</span>
+            <strong>2</strong>
+            <p>Labs Facilitados</p>
+        </div>
+    </div>
+
+    <!-- Barra de Experiência -->
+    <div class="card">
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Nível Atual: Estrategista</span>
+                <span style="color: #007BFF;">650 / 1000 XP</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+        <p style="font-size: 13px; margin: 0;">Faltam 350 XP para alcançar o nível <strong>Mestre Analítico</strong>. Facilite o próximo laboratório para ganhar +200 XP!</p>
+    </div>
+
+    <!-- Mural de Conquistas -->
+    <div>
+        <span class="tag" style="margin-bottom: 12px;">Mural de Conquistas</span>
+        <div class="badges-container">
+            <div class="badge-item">
+                <span>🎯</span> Pitch Aprovado
+            </div>
+            <div class="badge-item">
+                <span>🧠</span> Neuromarketing
+            </div>
+            <div class="badge-item">
+                <span>🛠️</span> Setup Técnico
+            </div>
+            <div class="badge-item" style="opacity: 0.5; background: #F8F9FA;">
+                <span>🔒</span> Mistério
+            </div>
+        </div>
+    </div>
+
+</section>
+    </main>
+
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="mudarAba('inicio', this)">
+            <span class="nav-icon">🏠</span><span>Início</span>
+        </div>
+        <div class="nav-item" onclick="mudarAba('laboratorios', this)">
+            <span class="nav-icon">🧪</span><span>Lab</span>
+        </div>
+        <div class="nav-item" onclick="mudarAba('espaco', this)">
+            <span class="nav-icon">📁</span><span>Espaço</span>
+        </div>
+        <div class="nav-item" onclick="mudarAba('progresso', this)">
+            <span class="nav-icon">📊</span><span>Evolução</span>
+        </div>
+    </nav>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script>
+        function mudarAba(abaId, elementoClicado) {
+            document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
+            document.getElementById('aba-' + abaId).classList.add('ativa');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            elementoClicado.classList.add('active');
+        }
+    </script>
+    <script>
+    // Registra o Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function() {
+        navigator.serviceWorker
+          .register("sw.js")
+          .then(res => console.log("Service Worker registrado com sucesso!"))
+          .catch(err => console.log("Falha no Service Worker", err));
+      });
+    }
+</script>
+</body>
+</html>
