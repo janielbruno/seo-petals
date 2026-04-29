@@ -351,6 +351,7 @@ Plano de Ação e Próximos Passos:
                 telaLogin.style.display = "none";
                 document.querySelector('.avatar').innerText = user.email.charAt(0).toUpperCase();
                 window.carregarNoticias(); // Puxa as notícias após o login
+                window.carregarSessaoAtiva(); // <-- ESSA LINHA DEVE ESTAR AQUI
             } else {
                 telaLogin.style.display = "flex";
             }
