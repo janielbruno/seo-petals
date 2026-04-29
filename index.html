@@ -130,7 +130,19 @@
     </style>
 </head>
 <body>
-
+<!-- TELA DE LOGIN (Sobrepõe o aplicativo) -->
+    <div id="tela-login" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #F8F9FA; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
+        <div class="card" style="width: 100%; max-width: 400px; text-align: center; margin-bottom: 0;">
+            <h2 style="font-size: 24px; color: #1A1A1A; margin-bottom: 8px;">SEO Petals 🌸</h2>
+            <p style="margin-bottom: 24px; font-size: 14px;">Acesso restrito à equipe</p>
+            
+            <input type="email" id="emailLogin" placeholder="Seu e-mail" style="width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #CED4DA; border-radius: 8px;">
+            <input type="password" id="senhaLogin" placeholder="Sua senha" style="width: 100%; padding: 14px; margin-bottom: 20px; border: 1px solid #CED4DA; border-radius: 8px;">
+            
+            <button class="btn-primary" onclick="fazerLogin()">Entrar no Hub</button>
+            <p id="msgErro" style="color: #D32F2F; font-size: 13px; margin-top: 16px; display: none; font-weight: 600;"></p>
+        </div>
+    </div>
     <header>
         <h1>SEO Petals 🌸</h1>
         <div class="avatar">VOCÊ</div>
@@ -337,6 +349,50 @@
 
     console.log("Firebase conectado com sucesso. Pronto para a próxima etapa!");
 
+    // =========================================================
+    // LÓGICA DE AUTENTICAÇÃO E LOGIN (FIREBASE)
+    // =========================================================
+    const telaLogin = document.getElementById("tela-login");
+    const inputEmail = document.getElementById("emailLogin");
+    const inputSenha = document.getElementById("senhaLogin");
+    const msgErro = document.getElementById("msgErro");
+
+    // 1. Fica "escutando" para ver se tem alguém logado
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Se o usuário está logado, esconde a tela de login
+            telaLogin.style.display = "none";
+            // Atualiza o avatar no topo com a primeira letra do e-mail
+            document.querySelector('.avatar').innerText = user.email.charAt(0).toUpperCase();
+            console.log("Usuário ativo:", user.email);
+        } else {
+            // Se não tem ninguém logado, mostra a tela de login
+            telaLogin.style.display = "flex";
+        }
+    });
+
+    // 2. Função acionada quando clica no botão "Entrar no Hub"
+    window.fazerLogin = function() {
+        const email = inputEmail.value;
+        const senha = inputSenha.value;
+        
+        // Limpa a mensagem de erro antes de tentar
+        msgErro.style.display = "none";
+
+        // Tenta fazer o login no Firebase
+        signInWithEmailAndPassword(auth, email, senha)
+            .then((userCredential) => {
+                // Sucesso! O onAuthStateChanged (acima) vai cuidar de esconder a tela.
+                inputSenha.value = ""; // Limpa a senha por segurança
+            })
+            .catch((error) => {
+                // Se der erro (senha errada, e-mail não existe), mostra o alerta
+                msgErro.innerText = "Acesso negado. Verifique seu e-mail e senha.";
+                msgErro.style.display = "block";
+                console.error("Erro no login:", error.code);
+            });
+    };
+    
     // =========================================================
     // LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
     // =========================================================
