@@ -164,7 +164,7 @@
             <!-- Card: Próxima Sessão -->
             <div class="card">
                 <span class="tag">Próximo Laboratório</span>
-                <h3>Neuromarketing em Title Tags e Meta Descriptions</h3>
+                <h3>Neuromarketing em Title Tags e Meta Deions</h3>
                 <p><strong>Data:</strong> Sexta-feira, 14:00<br><strong>Facilitador:</strong> Aberto</p>
             </div>
 
@@ -205,7 +205,7 @@
                     <div class="news-card">
                         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400&q=80" alt="Notícia 3" class="news-img">
                         <div class="news-content">
-                            <h4>Impacto técnico do JavaScript em páginas de produto</h4>
+                            <h4>Impacto técnico do Java em páginas de produto</h4>
                             <div class="news-source">Search Engine Journal • Ontem</div>
                         </div>
                     </div>
@@ -313,24 +313,74 @@
     </nav>
 
     <!-- LÓGICA JAVASCRIPT -->
-    <script>
-        function mudarAba(abaId, elementoClicado) {
-            document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
-            document.getElementById('aba-' + abaId).classList.add('ativa');
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            elementoClicado.classList.add('active');
-        }
-    </script>
-    <script>
-    // Registra o Service Worker
+    <!-- LÓGICA JAVASCRIPT E FIREBASE -->
+<script type="module">
+    // 1. Importar as funções principais do Firebase via CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAnalytics } from "firebase/analytics";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    // 2. Configuração do seu Projeto Firebase (COPIE AS SUAS CHAVES DO PASSO 2 AQUI)
+    const firebaseConfig = {
+        apiKey: "AIzaSyD7UltQiBZ1sATOdhS0sdVQFCTZZot_0jo",
+        authDomain: "seo-petals.firebaseapp.com",
+        projectId: "seo-petals",
+        storageBucket: "seo-petals.firebasestorage.app",
+        messagingSenderId: "1:282226943604:web:40b2a25dce3b359b26d321",
+        appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+        measurementId: "G-8F8R0KC0VD"
+    };
+
+    // 3. Inicializar o Firebase, a Autenticação e o Banco de Dados
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    console.log("Firebase conectado com sucesso!");
+
+    // =========================================================
+    // LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
+    // =========================================================
+    
+    // Como estamos usando type="module", precisamos atrelar as funções ao "window" 
+    // para que o HTML consiga enxergar o clique nos botões (onclick).
+    
+    window.mudarAba = function(abaId, elementoClicado) {
+        document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
+        document.getElementById('aba-' + abaId).classList.add('ativa');
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        elementoClicado.classList.add('active');
+    };
+
+    window.copiarTemplate = function() {
+        const textarea = document.getElementById("emailTemplate");
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
+        });
+    };
+
+    // Bloco de Notas (Local Storage)
+    const campoNotas = document.getElementById('blocoNotas');
+    if (campoNotas) {
+        campoNotas.value = localStorage.getItem('seoPetalsNotas') || '';
+        campoNotas.addEventListener('keyup', () => {
+            localStorage.setItem('seoPetalsNotas', campoNotas.value);
+        });
+    }
+
+    // Registro do Service Worker (Para PWA)
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function() {
-        navigator.serviceWorker
-          .register("sw.js")
-          .then(res => console.log("Service Worker registrado com sucesso!"))
-          .catch(err => console.log("Falha no Service Worker", err));
-      });
+        window.addEventListener("load", function() {
+            navigator.serviceWorker.register("sw.js")
+                .then(res => console.log("Service Worker registrado com sucesso!"))
+                .catch(err => console.log("Falha no Service Worker", err));
+        });
     }
 </script>
+
 </body>
 </html>
