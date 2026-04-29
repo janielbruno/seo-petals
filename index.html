@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEO Petals - Hub</title>
     <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#007BFF">
+    <meta name="theme-color" content="#007BFF">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         /* RESET E VARIÁVEIS GERAIS */
@@ -62,7 +62,32 @@
         .card h3 { font-size: 18px; margin-bottom: 8px; line-height: 1.4; color: #1A1A1A; }
         .card p { font-size: 14px; color: #666; margin-bottom: 16px; line-height: 1.5; }
 
-        /*  DE NOTÍCIAS */
+        /* BOTÕES E INPUTS */
+        .btn-primary {
+            background-color: #007BFF; color: #FFFFFF; border: none;
+            border-radius: 8px; padding: 14px; width: 100%; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: background 0.2s;
+        }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-secondary {
+            background-color: #E9ECEF; color: #333; border: none;
+            border-radius: 8px; padding: 14px; width: 100%; font-size: 14px;
+            font-weight: 600; cursor: pointer; margin-top: 10px;
+        }
+        textarea {
+            width: 100%; padding: 12px; border: 1px solid #CED4DA;
+            border-radius: 8px; font-size: 14px; line-height: 1.5;
+            color: #333; resize: vertical; margin-bottom: 16px;
+        }
+
+        /* ÁREA DE ARQUIVOS */
+        .file-upload-area {
+            border: 2px dashed #CED4DA; border-radius: 8px; padding: 20px;
+            text-align: center; color: #666; font-size: 14px; cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        /* CARROSSEL DE NOTÍCIAS */
         .carrossel-noticias {
             display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px;
             scroll-snap-type: x mandatory; /* Faz o scroll "travar" no card */
@@ -72,15 +97,13 @@
         
         .news-card {
             background: #FFFFFF; border-radius: 12px; border: 1px solid #E9ECEF;
-            flex: 0 0 85%; /* O card ocupa 85% da tela, deixando o próximo aparecendo */
+            flex: 0 0 85%; /* O card ocupa 85% da tela */
             scroll-snap-align: center; overflow: hidden; display: flex; flex-direction: column;
         }
         .news-img {
             width: 100%; height: 140px; background-color: #E9ECEF; object-fit: cover;
         }
-        .news-content { padding: 16px; }
-        .news-content h4 { font-size: 15px; color: #1A1A1A; margin-bottom: 6px; line-height: 1.3; }
-        .news-source { font-size: 12px; color: #888; }
+        .news-content { padding: 16px; display: flex; flex-direction: column; flex-grow: 1; }
 
         /* CAIXA DE INSIGHT DA SEMANA */
         .insight-box {
@@ -103,34 +126,23 @@
         .nav-icon { font-size: 20px; margin-bottom: 4px; }
 
         /* GAMIFICAÇÃO E PROGRESSO */
-.stats-grid {
-    display: flex; gap: 12px; margin-bottom: 24px;
-}
-.stat-box {
-    background: #F0F7FF; border: 1px solid #CCE5FF; border-radius: 12px;
-    padding: 16px 12px; text-align: center; flex: 1;
-}
-.stat-box span { display: block; font-size: 24px; margin-bottom: 4px; }
-.stat-box strong { font-size: 18px; color: #007BFF; display: block; }
-.stat-box p { font-size: 11px; color: #666; margin: 0; text-transform: uppercase; font-weight: 600; }
-
-.progress-container { margin-bottom: 24px; }
-.progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 600;}
-.progress-bar-bg { background-color: #E9ECEF; border-radius: 20px; height: 12px; width: 100%; overflow: hidden; }
-.progress-bar-fill { background-color: #007BFF; height: 100%; width: 65%; border-radius: 20px; transition: width 0.5s ease; }
-
-.badges-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-.badges-container::-webkit-scrollbar { display: none; }
-.badge-item {
-    background: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 50px;
-    padding: 8px 16px; display: flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 600; color: #333; flex-shrink: 0;
-}
-
+        .stats-grid { display: flex; gap: 12px; margin-bottom: 24px; }
+        .stat-box { background: #F0F7FF; border: 1px solid #CCE5FF; border-radius: 12px; padding: 16px 12px; text-align: center; flex: 1; }
+        .stat-box span { display: block; font-size: 24px; margin-bottom: 4px; }
+        .stat-box strong { font-size: 18px; color: #007BFF; display: block; }
+        .stat-box p { font-size: 11px; color: #666; margin: 0; text-transform: uppercase; font-weight: 600; }
+        .progress-container { margin-bottom: 24px; }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 600;}
+        .progress-bar-bg { background-color: #E9ECEF; border-radius: 20px; height: 12px; width: 100%; overflow: hidden; }
+        .progress-bar-fill { background-color: #007BFF; height: 100%; width: 65%; border-radius: 20px; transition: width 0.5s ease; }
+        .badges-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+        .badges-container::-webkit-scrollbar { display: none; }
+        .badge-item { background: #FFFFFF; border: 1px solid #E9ECEF; border-radius: 50px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #333; flex-shrink: 0; }
     </style>
 </head>
 <body>
-<!-- TELA DE LOGIN (Sobrepõe o aplicativo) -->
+
+    <!-- TELA DE LOGIN (Sobrepõe o aplicativo) -->
     <div id="tela-login" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #F8F9FA; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px;">
         <div class="card" style="width: 100%; max-width: 400px; text-align: center; margin-bottom: 0;">
             <h2 style="font-size: 24px; color: #1A1A1A; margin-bottom: 8px;">SEO Petals 🌸</h2>
@@ -139,13 +151,14 @@
             <input type="email" id="emailLogin" placeholder="Seu e-mail" style="width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #CED4DA; border-radius: 8px;">
             <input type="password" id="senhaLogin" placeholder="Sua senha" style="width: 100%; padding: 14px; margin-bottom: 20px; border: 1px solid #CED4DA; border-radius: 8px;">
             
-            <button class="btn-primary" onclick="fazerLogin()">Entrar no Hub</button>
+            <button class="btn-primary" onclick="window.fazerLogin()">Entrar no Hub</button>
             <p id="msgErro" style="color: #D32F2F; font-size: 13px; margin-top: 16px; display: none; font-weight: 600;"></p>
         </div>
     </div>
+
     <header>
         <h1>SEO Petals 🌸</h1>
-        <div class="avatar">VOCÊ</div>
+        <div class="avatar">...</div>
     </header>
 
     <main>
@@ -159,13 +172,13 @@
 
             <!-- Atalhos Rápidos -->
             <div class="atalhos-container">
-                <div class="atalho-btn" onclick="mudarAba('espaco', document.querySelectorAll('.nav-item')[2])">
+                <div class="atalho-btn" onclick="window.mudarAba('espaco', document.querySelectorAll('.nav-item')[2])">
                     <span>📝</span><p>Anotação</p>
                 </div>
                 <div class="atalho-btn">
                     <span>📚</span><p>Guias</p>
                 </div>
-                <div class="atalho-btn" onclick="mudarAba('laboratorios', document.querySelectorAll('.nav-item')[1])">
+                <div class="atalho-btn" onclick="window.mudarAba('laboratorios', document.querySelectorAll('.nav-item')[1])">
                     <span>💡</span><p>Gerar Pitch</p>
                 </div>
                 <div class="atalho-btn">
@@ -176,7 +189,7 @@
             <!-- Card: Próxima Sessão -->
             <div class="card">
                 <span class="tag">Próximo Laboratório</span>
-                <h3>Neuromarketing em Title Tags e Meta Deions</h3>
+                <h3>Neuromarketing em Title Tags e Meta Descriptions</h3>
                 <p><strong>Data:</strong> Sexta-feira, 14:00<br><strong>Facilitador:</strong> Aberto</p>
             </div>
 
@@ -192,285 +205,256 @@
             <!-- Carrossel de Notícias -->
             <div>
                 <span class="tag" style="margin-bottom: 12px;">Radar SEO (Últimas Notícias)</span>
-               <div class="carrossel-noticias" id="noticias-container">
+                <div class="carrossel-noticias" id="noticias-container">
                     <!-- As notícias entrarão aqui via JavaScript -->
                     <p style="padding: 16px; font-size: 14px; color: #666;">Buscando radar SEO...</p>
-                </div>
-
                 </div>
             </div>
         </section>
 
-        <!-- ABA 2: LABORATÓRIOS (Mantida como antes) -->
+        <!-- ABA 2: LABORATÓRIOS -->
         <section id="aba-laboratorios" class="aba-conteudo">
             <div class="card">
                 <span class="tag">Sessão Atual</span>
                 <h3>Neuromarketing em SERP</h3>
                 <p>Tópicos discutidos: Densidade de palavras-chave x Gatilhos cognitivos de clique.</p>
             </div>
-            <!-- ... resto da aba laboratórios ... -->
+
+            <div class="card">
+                <span class="tag">Pós-Laboratório</span>
+                <h3>Gerador de Proposta para Gestão</h3>
+                <p>Compile os diagnósticos e leve a proposta para a diretoria.</p>
+                <textarea id="emailTemplate" rows="10">Assunto: [SEO Petals] Proposta de Melhoria: Neuromarketing em SERP
+
+Contexto:
+Na última sessão do laboratório, a equipe analisou o impacto de gatilhos cognitivos na SERP.
+
+Diagnóstico (Onde acertamos/pecamos):
+[Escreva aqui]
+
+Plano de Ação e Próximos Passos:
+[Escreva aqui as sugestões para a gestão]</textarea>
+                <button class="btn-primary" onclick="window.copiarTemplate()">📋 Copiar Proposta</button>
+            </div>
         </section>
 
-        <!-- ABA 3: MEU ESPAÇO (Mantida como antes) -->
+        <!-- ABA 3: MEU ESPAÇO -->
         <section id="aba-espaco" class="aba-conteudo">
             <div class="card">
                 <span class="tag">Bloco de Notas Rápido</span>
                 <p>Suas anotações são salvas automaticamente no seu navegador.</p>
+                <textarea id="blocoNotas" rows="8" placeholder="Digite seus insights durante o laboratório aqui..."></textarea>
             </div>
-            <!-- ... resto da aba espaço ... -->
+
+            <div class="card">
+                <span class="tag">Arquivos do Laboratório</span>
+                <p>Importe as apresentações ou arquivos Word da sessão.</p>
+                <div class="file-upload-area">
+                    📎 Clique ou arraste arquivos PPT, Word ou PDF aqui
+                </div>
+                <button class="btn-secondary">Acessar Histórico de Arquivos</button>
+            </div>
         </section>
 
-        <!-- ABA 4: PROGRESSO (Evolução e Gamificação) -->
-<section id="aba-progresso" class="aba-conteudo">
-    
-    <div class="saudacao">
-        <h2>Seu Impacto 🚀</h2>
-        <p>Acompanhe seu crescimento no hub de aprendizado.</p>
-    </div>
+        <!-- ABA 4: PROGRESSO -->
+        <section id="aba-progresso" class="aba-conteudo">
+            <div class="saudacao">
+                <h2>Seu Impacto 🚀</h2>
+                <p>Acompanhe seu crescimento no hub de aprendizado.</p>
+            </div>
 
-    <!-- Estatísticas Rápidas -->
-    <div class="stats-grid">
-        <div class="stat-box">
-            <span>🔥</span>
-            <strong>3</strong>
-            <p>Semanas Seguidas</p>
-        </div>
-        <div class="stat-box">
-            <span>🧪</span>
-            <strong>8</strong>
-            <p>Labs Participados</p>
-        </div>
-        <div class="stat-box">
-            <span>🎤</span>
-            <strong>2</strong>
-            <p>Labs Facilitados</p>
-        </div>
-    </div>
+            <div class="stats-grid">
+                <div class="stat-box"><span>🔥</span><strong>3</strong><p>Semanas</p></div>
+                <div class="stat-box"><span>🧪</span><strong>8</strong><p>Labs</p></div>
+                <div class="stat-box"><span>🎤</span><strong>2</strong><p>Facilitados</p></div>
+            </div>
 
-    <!-- Barra de Experiência -->
-    <div class="card">
-        <div class="progress-container">
-            <div class="progress-header">
-                <span>Nível Atual: Estrategista</span>
-                <span style="color: #007BFF;">650 / 1000 XP</span>
+            <div class="card">
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Nível Atual: Estrategista</span>
+                        <span style="color: #007BFF;">650 / 1000 XP</span>
+                    </div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+                </div>
+                <p style="font-size: 13px; margin: 0;">Faltam 350 XP para alcançar o nível <strong>Mestre Analítico</strong>.</p>
             </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <p style="font-size: 13px; margin: 0;">Faltam 350 XP para alcançar o nível <strong>Mestre Analítico</strong>. Facilite o próximo laboratório para ganhar +200 XP!</p>
-    </div>
 
-    <!-- Mural de Conquistas -->
-    <div>
-        <span class="tag" style="margin-bottom: 12px;">Mural de Conquistas</span>
-        <div class="badges-container">
-            <div class="badge-item">
-                <span>🎯</span> Pitch Aprovado
+            <div>
+                <span class="tag" style="margin-bottom: 12px;">Mural de Conquistas</span>
+                <div class="badges-container">
+                    <div class="badge-item"><span>🎯</span> Pitch Aprovado</div>
+                    <div class="badge-item"><span>🧠</span> Neuromarketing</div>
+                    <div class="badge-item"><span>🛠️</span> Setup Técnico</div>
+                    <div class="badge-item" style="opacity: 0.5; background: #F8F9FA;"><span>🔒</span> Mistério</div>
+                </div>
             </div>
-            <div class="badge-item">
-                <span>🧠</span> Neuromarketing
-            </div>
-            <div class="badge-item">
-                <span>🛠️</span> Setup Técnico
-            </div>
-            <div class="badge-item" style="opacity: 0.5; background: #F8F9FA;">
-                <span>🔒</span> Mistério
-            </div>
-        </div>
-    </div>
-
-</section>
+        </section>
     </main>
 
     <!-- NAVEGAÇÃO INFERIOR -->
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="mudarAba('inicio', this)">
+        <div class="nav-item active" onclick="window.mudarAba('inicio', this)">
             <span class="nav-icon">🏠</span><span>Início</span>
         </div>
-        <div class="nav-item" onclick="mudarAba('laboratorios', this)">
+        <div class="nav-item" onclick="window.mudarAba('laboratorios', this)">
             <span class="nav-icon">🧪</span><span>Lab</span>
         </div>
-        <div class="nav-item" onclick="mudarAba('espaco', this)">
+        <div class="nav-item" onclick="window.mudarAba('espaco', this)">
             <span class="nav-icon">📁</span><span>Espaço</span>
         </div>
-        <div class="nav-item" onclick="mudarAba('progresso', this)">
+        <div class="nav-item" onclick="window.mudarAba('progresso', this)">
             <span class="nav-icon">📊</span><span>Evolução</span>
         </div>
     </nav>
 
+    <!-- LÓGICA JAVASCRIPT E FIREBASE -->
+    <script type="module">
+        // 1. Importar funções Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-   <!-- LÓGICA JAVASCRIPT E FIREBASE -->
-<script type="module">
-    // 1. Importar as funções principais do Firebase via CDN (Sem o Analytics)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        // 2. Configuração Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7UltQiBZ1sATOdhS0sdVQFCTZZot_0jo",
+            authDomain: "seo-petals.firebaseapp.com",
+            projectId: "seo-petals",
+            storageBucket: "seo-petals.firebasestorage.app",
+            messagingSenderId: "282226943604",
+            appId: "1:282226943604:web:40b2a25dce3b359b26d321" 
+        };
 
-    // 2. Configuração do seu Projeto Firebase
-    const firebaseConfig = {
-        apiKey: "AIzaSyD7UltQiBZ1sATOdhS0sdVQFCTZZot_0jo",
-        authDomain: "seo-petals.firebaseapp.com",
-        projectId: "seo-petals",
-        storageBucket: "seo-petals.firebasestorage.app",
-        messagingSenderId: "282226943604",
-        appId: "1:282226943604:web:40b2a25dce3b359b26d321" 
-    };
+        // 3. Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    // 3. Inicializar o Firebase, a Autenticação e o Banco de Dados
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        console.log("Firebase conectado com sucesso.");
 
-    console.log("Firebase conectado com sucesso. Pronto para a próxima etapa!");
+        // =========================================================
+        // LÓGICA DE AUTENTICAÇÃO E LOGIN (FIREBASE)
+        // =========================================================
+        const telaLogin = document.getElementById("tela-login");
+        const inputEmail = document.getElementById("emailLogin");
+        const inputSenha = document.getElementById("senhaLogin");
+        const msgErro = document.getElementById("msgErro");
 
-    // =========================================================
-    // LÓGICA DE AUTENTICAÇÃO E LOGIN (FIREBASE)
-    // =========================================================
-    const telaLogin = document.getElementById("tela-login");
-    const inputEmail = document.getElementById("emailLogin");
-    const inputSenha = document.getElementById("senhaLogin");
-    const msgErro = document.getElementById("msgErro");
-
-    // 1. Fica "escutando" para ver se tem alguém logado
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Se o usuário está logado, esconde a tela de login
-            telaLogin.style.display = "none";
-            // Atualiza o avatar no topo com a primeira letra do e-mail
-            document.querySelector('.avatar').innerText = user.email.charAt(0).toUpperCase();
-            console.log("Usuário ativo:", user.email);
-
-            // CHAMA A FUNÇÃO DE NOTÍCIAS AQUI!
-            carregarNoticias();
-            
-        } else {
-            // Se não tem ninguém logado, mostra a tela de login
-            telaLogin.style.display = "flex";
-        }
-    });
-
-    // 2. Função acionada quando clica no botão "Entrar no Hub"
-    .fazerLogin = function() {
-        const email = inputEmail.value;
-        const senha = inputSenha.value;
-        
-        // Limpa a mensagem de erro antes de tentar
-        msgErro.style.display = "none";
-
-        // Tenta fazer o login no Firebase
-        signInWithEmailAndPassword(auth, email, senha)
-            .then((userCredential) => {
-                // Sucesso! O onAuthStateChanged (acima) vai cuidar de esconder a tela.
-                inputSenha.value = ""; // Limpa a senha por segurança
-            })
-            .catch((error) => {
-                // Se der erro (senha errada, e-mail não existe), mostra o alerta
-                msgErro.innerText = "Acesso negado. Verifique seu e-mail e senha.";
-                msgErro.style.display = "block";
-                console.error("Erro no login:", error.code);
-            });
-    };
-    
-    // =========================================================
-    // LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
-    // =========================================================
-
-    .mudarAba = function(abaId, elementoClicado) {
-        document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
-        document.getElementById('aba-' + abaId).classList.add('ativa');
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        elementoClicado.classList.add('active');
-    };
-
-    window.copiarTemplate = function() {
-        const textarea = document.getElementById("emailTemplate");
-        textarea.select();
-        textarea.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(textarea.value).then(() => {
-            alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
-        });
-    };
-
-    // =========================================================
-    // LÓGICA DO FEED DE NOTÍCIAS (RSS TO JSON)
-    // =========================================================
-    
-    window.carregarNoticias = async function() {
-        const container = document.getElementById("noticias-container");
-        
-        // Fontes oficiais de SEO
-        const feeds = [
-            { nome: "Google Search Central", url: "https://developers.google.com/search/blog/rss" },
-            { nome: "Search Engine Journal", url: "https://www.searchenginejournal.com/feed/" },
-            { nome: "Search Engine Land", url: "https://searchengineland.com/feed" }
-        ];
-
-        let htmlNoticias = "";
-
-        for (const feed of feeds) {
-            try {
-                // Usa a API rss2json para contornar o bloqueio de segurança
-                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-
-                if (data.status === "ok") {
-                    // A MUDANÇA ESTÁ AQUI: Pega as 3 notícias mais recentes de cada portal
-                    const topItems = data.items.slice(0, 3);
-
-                    // Cria um card para cada uma dessas notícias
-                    for (const item of topItems) {
-                        // Tenta achar a imagem de destaque
-                        let imgUrl = item.thumbnail || 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80';
-                        
-                        if (!item.thumbnail && item.content) {
-                            const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
-                            if (imgMatch) imgUrl = imgMatch[1];
-                        }
-
-                        // Monta o HTML do card com ajustes no tamanho da fonte para caber melhor
-                        htmlNoticias += `
-                        <div class="news-card" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
-                            <img src="${imgUrl}" alt="Imagem da Notícia" class="news-img">
-                            <div class="news-content">
-                                <h4 style="font-size: 14px; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${item.title}</h4>
-                                <div class="news-source" style="font-size: 11px; color: #888; margin-top: auto;">${feed.nome}</div>
-                            </div>
-                        </div>
-                        `;
-                    }
-                }
-            } catch (error) {
-                console.error("Erro ao carregar do portal: " + feed.nome, error);
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                telaLogin.style.display = "none";
+                document.querySelector('.avatar').innerText = user.email.charAt(0).toUpperCase();
+                window.carregarNoticias(); // Puxa as notícias após o login
+            } else {
+                telaLogin.style.display = "flex";
             }
+        });
+
+        window.fazerLogin = function() {
+            const email = inputEmail.value;
+            const senha = inputSenha.value;
+            msgErro.style.display = "none";
+
+            signInWithEmailAndPassword(auth, email, senha)
+                .then((userCredential) => {
+                    inputSenha.value = "";
+                })
+                .catch((error) => {
+                    msgErro.innerText = "Acesso negado. Verifique seu e-mail e senha.";
+                    msgErro.style.display = "block";
+                });
+        };
+        
+        // =========================================================
+        // LÓGICA DE INTERFACE (Abas e Copiar Proposta)
+        // =========================================================
+        window.mudarAba = function(abaId, elementoClicado) {
+            document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
+            document.getElementById('aba-' + abaId).classList.add('ativa');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            elementoClicado.classList.add('active');
+        };
+
+        window.copiarTemplate = function() {
+            const textarea = document.getElementById("emailTemplate");
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                alert("Proposta copiada com sucesso! Pronta para enviar para a diretoria.");
+            });
+        };
+
+        // =========================================================
+        // LÓGICA DO FEED DE NOTÍCIAS (RSS TO JSON)
+        // =========================================================
+        window.carregarNoticias = async function() {
+            const container = document.getElementById("noticias-container");
+            
+            const feeds = [
+                { nome: "Google Search Central", url: "https://developers.google.com/search/blog/rss" },
+                { nome: "Search Engine Journal", url: "https://www.searchenginejournal.com/feed/" },
+                { nome: "Search Engine Land", url: "https://searchengineland.com/feed" }
+            ];
+
+            let htmlNoticias = "";
+
+            for (const feed of feeds) {
+                try {
+                    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+
+                    if (data.status === "ok") {
+                        const topItems = data.items.slice(0, 3); // 3 Notícias de cada feed
+
+                        for (const item of topItems) {
+                            let imgUrl = item.thumbnail || 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80';
+                            
+                            if (!item.thumbnail && item.content) {
+                                const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                                if (imgMatch) imgUrl = imgMatch[1];
+                            }
+
+                            htmlNoticias += `
+                            <div class="news-card" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+                                <img src="${imgUrl}" alt="Imagem da Notícia" class="news-img">
+                                <div class="news-content">
+                                    <h4 style="font-size: 14px; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${item.title}</h4>
+                                    <div class="news-source" style="font-size: 11px; color: #888; margin-top: auto;">${feed.nome}</div>
+                                </div>
+                            </div>
+                            `;
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erro ao carregar feed: " + feed.nome, error);
+                }
+            }
+
+            if(htmlNoticias !== "") {
+                container.innerHTML = htmlNoticias;
+            } else {
+                container.innerHTML = "<p style='padding: 16px; font-size: 14px; color: #D32F2F;'>Falha ao carregar o radar.</p>";
+            }
+        };
+
+        // Bloco de Notas (Local Storage)
+        const campoNotas = document.getElementById('blocoNotas');
+        if (campoNotas) {
+            campoNotas.value = localStorage.getItem('seoPetalsNotas') || '';
+            campoNotas.addEventListener('keyup', () => {
+                localStorage.setItem('seoPetalsNotas', campoNotas.value);
+            });
         }
 
-        if(htmlNoticias !== "") {
-            container.innerHTML = htmlNoticias;
-        } else {
-            container.innerHTML = "<p style='padding: 16px; font-size: 14px; color: #D32F2F;'>Falha ao carregar o radar.</p>";
+        // Registro do Service Worker (Para PWA)
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+                navigator.serviceWorker.register("sw.js")
+                    .then(res => console.log("Service Worker registrado!"))
+                    .catch(err => console.log("Falha no Service Worker", err));
+            });
         }
-    };
-
-    // Bloco de Notas (Local Storage)
-    const campoNotas = document.getElementById('blocoNotas');
-    if (campoNotas) {
-        campoNotas.value = localStorage.getItem('seoPetalsNotas') || '';
-        campoNotas.addEventListener('keyup', () => {
-            localStorage.setItem('seoPetalsNotas', campoNotas.value);
-        });
-    }
-
-    // Registro do Service Worker (Para PWA)
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function() {
-            navigator.serviceWorker.register("sw.js")
-                .then(res => console.log("Service Worker registrado com sucesso!"))
-                .catch(err => console.log("Falha no Service Worker", err));
-        });
-    }
-</script>
-
+    </script>
 </body>
 </html>
