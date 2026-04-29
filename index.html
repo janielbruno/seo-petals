@@ -351,7 +351,7 @@
     });
 
     // 2. Função acionada quando clica no botão "Entrar no Hub"
-    window.fazerLogin = function() {
+    .fazerLogin = function() {
         const email = inputEmail.value;
         const senha = inputSenha.value;
         
@@ -376,7 +376,7 @@
     // LÓGICA DE INTERFACE (Abas, Notas e Copiar Proposta)
     // =========================================================
 
-    window.mudarAba = function(abaId, elementoClicado) {
+    .mudarAba = function(abaId, elementoClicado) {
         document.querySelectorAll('.aba-conteudo').forEach(aba => aba.classList.remove('ativa'));
         document.getElementById('aba-' + abaId).classList.add('ativa');
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -410,41 +410,42 @@
 
         for (const feed of feeds) {
             try {
-                // Usa a API rss2json para contornar o bloqueio de segurança do navegador
+                // Usa a API rss2json para contornar o bloqueio de segurança
                 const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`;
                 const response = await fetch(apiUrl);
                 const data = await response.json();
 
                 if (data.status === "ok") {
-                    // Pega apenas a notícia mais recente (posição 0) de cada portal
-                    const item = data.items[0];
+                    // A MUDANÇA ESTÁ AQUI: Pega as 3 notícias mais recentes de cada portal
+                    const topItems = data.items.slice(0, 3);
 
-                    // Tenta achar a imagem de destaque da notícia. Se não tiver, usa uma imagem genérica de SEO
-                    let imgUrl = item.thumbnail || 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80';
-                    
-                    // Se o feed não mandar thumbnail, o script procura uma imagem dentro do texto
-                    if (!item.thumbnail && item.content) {
-                        const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
-                        if (imgMatch) imgUrl = imgMatch[1];
-                    }
+                    // Cria um card para cada uma dessas notícias
+                    for (const item of topItems) {
+                        // Tenta achar a imagem de destaque
+                        let imgUrl = item.thumbnail || 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80';
+                        
+                        if (!item.thumbnail && item.content) {
+                            const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                            if (imgMatch) imgUrl = imgMatch[1];
+                        }
 
-                    // Constrói o card da notícia em HTML
-                    htmlNoticias += `
-                    <div class="news-card" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
-                        <img src="${imgUrl}" alt="Imagem da Notícia" class="news-img">
-                        <div class="news-content">
-                            <h4>${item.title}</h4>
-                            <div class="news-source">${feed.nome}</div>
+                        // Monta o HTML do card com ajustes no tamanho da fonte para caber melhor
+                        htmlNoticias += `
+                        <div class="news-card" onclick="window.open('${item.link}', '_blank')" style="cursor: pointer;">
+                            <img src="${imgUrl}" alt="Imagem da Notícia" class="news-img">
+                            <div class="news-content">
+                                <h4 style="font-size: 14px; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${item.title}</h4>
+                                <div class="news-source" style="font-size: 11px; color: #888; margin-top: auto;">${feed.nome}</div>
+                            </div>
                         </div>
-                    </div>
-                    `;
+                        `;
+                    }
                 }
             } catch (error) {
                 console.error("Erro ao carregar do portal: " + feed.nome, error);
             }
         }
 
-        // Se conseguiu carregar, injeta os cards no carrossel. Se falhou, avisa.
         if(htmlNoticias !== "") {
             container.innerHTML = htmlNoticias;
         } else {
