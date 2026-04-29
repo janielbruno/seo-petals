@@ -478,32 +478,40 @@ Plano de Ação e Próximos Passos:
             }
         };
 
-        // =========================================================
-        // LÓGICA DO BANCO DE DADOS (FIRESTORE)
+       // =========================================================
+        // LÓGICA DO BANCO DE DADOS (FIRESTORE) - COM RASTREADOR
         // =========================================================
         window.carregarSessaoAtiva = async function() {
+            console.log("🟢 1. Função de buscar laboratório foi acionada!");
             try {
-                // Cria uma consulta: "Busque na coleção 'sessoes' onde o status seja 'ativo'"
+                console.log("🟢 2. Montando a busca na coleção 'sessoes'...");
                 const q = query(collection(db, "sessoes"), where("status", "==", "ativo"));
+                
+                console.log("🟢 3. Conectando aos servidores do Google...");
                 const querySnapshot = await getDocs(q);
+                
+                console.log("🟢 4. Resposta recebida! Itens encontrados: ", querySnapshot.size);
 
                 if (!querySnapshot.empty) {
-                    // Pega o primeiro documento que achar
                     const sessao = querySnapshot.docs[0].data();
+                    console.log("🟢 5. Dados lidos do banco: ", sessao);
 
                     // Preenche a Aba Início
-                    document.getElementById("lab-titulo").innerText = sessao.titulo;
-                    document.getElementById("lab-data").innerText = "Data: " + sessao.data;
-                    document.getElementById("lab-fac").innerText = "Facilitador: " + sessao.facilitador;
+                    document.getElementById("lab-titulo").innerText = sessao.titulo || "Título em branco";
+                    document.getElementById("lab-data").innerText = "Data: " + (sessao.data || "");
+                    document.getElementById("lab-fac").innerText = "Facilitador: " + (sessao.facilitador || "");
 
                     // Preenche a Aba Laboratórios
-                    document.getElementById("aba-lab-titulo").innerText = sessao.titulo;
-                    document.getElementById("aba-lab-topicos").innerText = "Tópicos discutidos: " + sessao.topicos;
+                    document.getElementById("aba-lab-titulo").innerText = sessao.titulo || "Título em branco";
+                    document.getElementById("aba-lab-topicos").innerText = "Tópicos discutidos: " + (sessao.topicos || "");
+                    
+                    console.log("🟢 6. Interface HTML atualizada com sucesso!");
                 } else {
+                    console.log("🟠 AVISO: A busca funcionou, mas não encontrou nenhum laboratório com status 'ativo'.");
                     document.getElementById("lab-titulo").innerText = "Nenhum laboratório agendado";
                 }
             } catch (error) {
-                console.error("Erro ao puxar dados do Firestore:", error);
+                console.error("🔴 ERRO GRAVE ao puxar dados do Firestore:", error);
             }
         };
 
