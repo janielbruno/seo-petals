@@ -204,7 +204,13 @@
 
             <!-- Carrossel de Notícias -->
             <div>
-                <span class="tag" style="margin-bottom: 12px;">Radar SEO (Últimas Notícias)</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span class="tag" style="margin-bottom: 0;">Radar SEO (Últimas)</span>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="window.rolarCarrossel(-1)" style="background: #E9ECEF; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer;">❮</button>
+                        <button onclick="window.rolarCarrossel(1)" style="background: #E9ECEF; border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer;">❯</button>
+                    </div>
+                </div>
                 <div class="carrossel-noticias" id="noticias-container">
                     <!-- As notícias entrarão aqui via JavaScript -->
                     <p style="padding: 16px; font-size: 14px; color: #666;">Buscando radar SEO...</p>
@@ -384,6 +390,21 @@ Plano de Ação e Próximos Passos:
             });
         };
 
+        // =========================================================
+    // LÓGICA DE ROLAGEM DO CARROSSEL
+    // =========================================================
+    window.rolarCarrossel = function(direcao) {
+        const container = document.getElementById("noticias-container");
+        // Pega a largura exata de um card de notícia (85% da tela + o gap)
+        const larguraDoCard = container.clientWidth * 0.85 + 16; 
+        
+        // Faz a rolagem suave para o lado clicado
+        container.scrollBy({ 
+            left: larguraDoCard * direcao, 
+            behavior: 'smooth' 
+        });
+    };
+        
         // =========================================================
         // LÓGICA DO FEED DE NOTÍCIAS (RSS TO JSON)
         // =========================================================
